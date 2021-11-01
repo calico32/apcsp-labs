@@ -18,7 +18,7 @@ else:
     print("Invalid format")
     exit()
 
-print(f'{format.capitalize()}: {result}')
+print(f'{hours}h{minutes}m{seconds}s is equal to {result} seconds')
 
 
 # thank you copilot
