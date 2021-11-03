@@ -8,14 +8,6 @@ units = [
 ]
 
 
-# pluralize unit
-def plural(n):
-    if n > 1:
-        return 's'
-    else:
-        return ''
-
-
 # join list of strings with commas
 def comma_separated_and(list: list[str]) -> str:
     if len(list) == 0:
@@ -33,7 +25,8 @@ def format_units(values: list[int]) -> str:
     out: list[str] = []
     for index, (unit, _) in enumerate(units):
         if values[index] > 0:
-            out.append(f'{values[index]} {unit}{plural(values[index])}')
+            out.append(
+                f'{values[index]} {unit}{"s" if values[index] > 1 else ""}')
 
     return comma_separated_and(out)
 
@@ -55,4 +48,5 @@ if __name__ == '__main__':
     except ValueError:
         print("Invalid input. Exiting.")
         exit(1)
+
     print(f'{seconds} seconds is equal to {calculate_units(seconds)}')
