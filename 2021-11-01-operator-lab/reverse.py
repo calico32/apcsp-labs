@@ -35,7 +35,7 @@ def format_units(values: list[int]) -> str:
 def calculate_units(seconds: int) -> str:
     values: list[int] = []
 
-    for (index, (unit, conversion)) in enumerate(units):
+    for index, (unit, conversion) in enumerate(units):
         values.append(seconds // conversion)
         seconds %= conversion
 
@@ -44,7 +44,7 @@ def calculate_units(seconds: int) -> str:
 
 if __name__ == '__main__':
     try:
-        seconds = int(input("Enter seconds: "))
+        seconds = int(input("Enter seconds (int): "))
     except ValueError:
         print("Invalid input. Exiting.")
         exit(1)
