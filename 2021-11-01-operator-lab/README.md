@@ -5,7 +5,7 @@ operators
 `forward.py`
 
 ```
-❯ python main.py
+❯ python forward.py
 Enter the number of hours: 12
 Enter the number of minutes: 34
 Enter the number of seconds: 56
