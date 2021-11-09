@@ -1,43 +1,46 @@
-# units to convert to, greatest to least
+# units to convert to, least to greatest
 units = [
-    ('year', 365 * 24 * 60 * 60),
-    ('day', 24 * 60 * 60),
-    ('hour', 60 * 60),
     ('minute', 60),
-    ('second', 1),
+    ('hour', 60),
+    ('day', 24),
+    ('year', 365),
 ]
 
 
 # join list of strings with commas
-def comma_separated_and(list: list[str]) -> str:
-    if len(list) == 0:
+def comma_separated_and(l: list[str]) -> str:
+    if len(l) == 0:
         return ''
-    elif len(list) == 1:
-        return list[0]
-    elif len(list) == 2:
-        return f'{list[0]} and {list[1]}'
+    elif len(l) == 1:
+        return l[0]
+    elif len(l) == 2:
+        return f'{l[0]} and {l[1]}'
     else:
-        return f'{", ".join(list[:-1])}, and {list[-1]}'
+        return f'{", ".join(l[:-1])}, and {l[-1]}'
 
 
 # convert values to string
-def format_units(values: list[int]) -> str:
+def format_units(values: list[tuple[int, str]]) -> str:
     out: list[str] = []
-    for index, (unit, _) in enumerate(units):
-        if values[index] > 0:
-            out.append(
-                f'{values[index]} {unit}{"s" if values[index] > 1 else ""}')
+    for count, name in values:
+        out.append(f'{count} {name}{"s" if count != 1 else ""}')
 
     return comma_separated_and(out)
 
 
 # convert seconds to units
 def calculate_units(seconds: int) -> str:
-    values: list[int] = []
+    values: list[tuple[int, str]] = [(seconds, 'second')]
 
-    for index, (unit, conversion) in enumerate(units):
-        values.append(seconds // conversion)
-        seconds %= conversion
+    for name, conversion in units:
+        current_count, current_name = values[0]
+        next_count = current_count // conversion
+
+        if next_count == 0:
+            break
+
+        values[0] = (current_count % conversion, current_name)
+        values.insert(0, (next_count, name))
 
     return format_units(values)
 
