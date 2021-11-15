@@ -1,9 +1,9 @@
 # Surface Area Lab
 
-`python main.py`
+`python surface_area.py`
 
 ```
-❯ python 2021-11-11-surface-area-lab/main.py
+❯ python surface_area.py
 Enter side 1 length: 123
 Enter side 2 length: 123
 Enter side 3 length: 123
