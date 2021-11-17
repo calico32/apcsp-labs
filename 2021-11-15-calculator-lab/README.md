@@ -1,19 +1,19 @@
 # Calculator Lab
 
+Requires colorama: `python -m pip -r requirements.txt`
+
 `python calculator.py`
 
 ```
 ❯ python calculator.py
-Enter the first number: 1
-Enter the second number: 2
-Enter the operator: +
-3
-```
+Enter a number > 6
+Enter operator [+-*/!^] > +
+Enter second number > 9
+6.0 + 9.0 => 15.0
 
-```
-❯ python calculator.py
-Enter the first number: 6
-Enter the second number: 0
-Enter the operator: /
-Cannot divide by zero.
+Enter a number > 5
+Enter operator [+-*/!^] > !
+5! => 120
+Enter a number > ^C
+Bye!
 ```
