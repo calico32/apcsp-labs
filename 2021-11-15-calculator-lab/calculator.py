@@ -65,6 +65,11 @@ def prompt_single(text: str, required=True) -> str:
     return value
 
 
+# header
+print(f"{Fore.GREEN}Calculator{Fore.RESET}")
+print("Ctrl+C or Ctrl+D to exit")
+print()
+
 while True:
     try:
         # get the first number
