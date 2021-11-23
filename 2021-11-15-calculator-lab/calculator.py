@@ -5,6 +5,7 @@ from colorama import Fore, Style, init  # type: ignore
 
 init()
 
+# getch function
 try:
     import msvcrt
     getch = msvcrt.getch  # type: ignore
@@ -34,7 +35,7 @@ def error(text: str) -> None:
 
 
 def prompt(text: str, required=True) -> str:
-    """ Print prompt message """
+    """ Print prompt message and wait for input """
     def get_input(): return input(f"{Fore.BLUE}{text} > {Fore.RESET}")
 
     if required:
@@ -48,7 +49,7 @@ def prompt(text: str, required=True) -> str:
 
 
 def prompt_single(text: str, required=True) -> str:
-    """ Print prompt message """
+    """ Print prompt message and wait for single character """
     def get_input():
         print(f"{Fore.BLUE}{text} > {Fore.RESET}", end='', flush=True)
         char = getch()
