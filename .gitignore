@@ -3,3 +3,5 @@
 *.ipynb
 __pycache__
 /*-ex
+.elixir_ls
+*.spec.md
