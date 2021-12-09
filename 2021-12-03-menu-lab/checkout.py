@@ -1,6 +1,7 @@
+from datetime import datetime
 from typing import List
 
-from util import Item, widths
+from _util import Item, widths
 
 SALES_TAX = 0.06825
 
@@ -21,20 +22,19 @@ def checkout(menu: List[Item]) -> None:
         len(total),
     )
 
-    single_columns = '| {:<' + str(quantity_width + item_width + 1) + \
-        '} | {:>' + str(last_col_width) + '} |'
-    columns = '| {:>' + str(quantity_width) + '} {:<' + \
-        str(item_width) + '} | {:>' + str(last_col_width) + '} |'
+    columns = f'| {{:>{quantity_width}}} {{:<{item_width}}} | {{:>{last_col_width}}} |'
+    two_columns = f'| {{:<{quantity_width + 1 + item_width}}} | {{:>{last_col_width}}} |'
+    single_column_width = quantity_width + 1 + item_width + 3 + last_col_width
+    single_column = f'| {{:<{single_column_width}}} |'
+    separator = f'+-{"-" * quantity_width}-{"-" * item_width}-+-{"-" * last_col_width}-+'
 
-    separator = '+-' + ('-' * quantity_width) + '-' + ('-' * item_width) + '-+-' + \
-        ('-' * last_col_width) + '-+'
-
-    column_names = single_columns.format('Item', 'Subtotal')
+    column_names = two_columns.format('Item', 'Subtotal')
 
     print()
     print(separator)
-    print(single_columns.format('Copilot Cafe™', ''))
-    print(single_columns.format('', ''))
+    print(single_column.format('Copilot Cafe'.center(single_column_width)))
+    print(single_column.format('*-*-*-*-*-*-*-*').center(single_column_width))
+    print(two_columns.format(datetime.now().strftime('%a %m/%d/%y %I:%M:%S %p'), ''))
     print(column_names)
     print(separator)
 
@@ -43,9 +43,9 @@ def checkout(menu: List[Item]) -> None:
               item.name, item.subtotal_formatted))
 
     print(separator)
-    print(single_columns.format('Subtotal', subtotal))
-    print(single_columns.format('Sales Tax', tax))
-    print(single_columns.format('Total', total))
+    print(two_columns.format('Subtotal', subtotal))
+    print(two_columns.format('Sales Tax', tax))
+    print(two_columns.format('Total', total))
     print(separator)
 
     exit()

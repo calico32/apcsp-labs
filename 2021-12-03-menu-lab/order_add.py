@@ -3,17 +3,17 @@ from typing import List
 from colorama import Fore, Style  # type: ignore
 from readchar import readkey  # type: ignore
 
-from util import (ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted,
-                  print_items)
+from _util import (ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted,
+                   print_items)
 
 
-def remove_items(menu: List[Item]) -> None:
+def order_add(menu: List[Item]) -> None:
     clear()
     banner(menu)
 
     selected = 0
 
-    def print_menu(cls=False):
+    def print_menu(cls=False) -> None:
         if cls:
             clear()
             banner(menu)
@@ -21,9 +21,9 @@ def remove_items(menu: List[Item]) -> None:
         print_items(menu, selected)
 
         print(Fore.CYAN + Style.BRIGHT +
-              "Removing items from your order (Ctrl+C to return)" + Style.RESET_ALL)
+              "Adding items to your order (Ctrl+C to return)" + Style.RESET_ALL)
 
-        print(Fore.GREEN + "Select the item you would like to remove." + Style.RESET_ALL)
+        print(Fore.GREEN + "Select the item you would like to add." + Style.RESET_ALL)
 
     print_menu()
 
@@ -49,19 +49,17 @@ def _prompt_quantity(menu: List[Item], selected: int) -> None:
     print_items(menu, selected)
 
     quantity = None
+
     try:
         while quantity is None:
             try:
-                value = int(
-                    input(Fore.GREEN + "Enter quantity to remove: " + Style.RESET_ALL))
-                if value < 0 or value > menu[selected].count:
+                value = int(input("Enter quantity to add: "))
+                if value < 0:
                     raise ValueError
                 quantity = value
             except ValueError:
-                print(
-                    Fore.RED + "Invalid quantity. Please enter a positive integer less than or equal to the number of items in your order." + Style.RESET_ALL
-                )
+                print("Invalid quantity. Please enter a positive number.")
 
-        menu[selected].count -= quantity
+        menu[selected].count += quantity
     except KeyboardInterrupt:
         return

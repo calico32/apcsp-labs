@@ -4,9 +4,9 @@ from typing import List, NewType
 from colorama import Fore, Style  # type: ignore
 from readchar import readkey  # type: ignore
 
-from prompt import prompt_index, prompt_name, prompt_price
-from util import (ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted,
-                  print_items)
+from _prompt import prompt_index, prompt_name, prompt_price
+from _util import (ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted,
+                   print_items)
 
 
 class EditMode(Enum):

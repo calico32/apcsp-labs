@@ -1,12 +1,12 @@
 
-from re import M, match
-from typing import List, final
+from re import match
+from typing import List
 
 from colorama import Fore, Style  # type: ignore
 from readchar import readkey  # type: ignore
 
-from prompt import prompt_file
-from util import Item
+from _prompt import prompt_file
+from _util import Item
 
 
 def export_state(menu: List[Item], file=False) -> None:

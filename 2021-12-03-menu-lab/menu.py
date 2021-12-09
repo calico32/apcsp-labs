@@ -5,13 +5,13 @@ import colorama  # type: ignore
 from colorama import Fore, Style
 from readchar import readkey  # type: ignore
 
-from add import add_items
 from checkout import checkout
 from edit import EditMode, edit_items
-from remove import remove_items
+from order_add import order_add
+from order_remove import order_remove
 from state import export_state, import_state
-from util import (ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted,
-                  print_items)
+from _util import (ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted,
+                   print_items)
 
 colorama.init()
 
@@ -39,8 +39,8 @@ class MenuOption(object):
         self.run = run
 
 
-def menu_order_add(_, __): add_items(menu)
-def menu_order_remove(_, __): remove_items(menu)
+def menu_order_add(_, __): order_add(menu)
+def menu_order_remove(_, __): order_remove(menu)
 def menu_edit_add(_, __): edit_items(menu, EditMode.ADD)
 
 
@@ -58,14 +58,14 @@ def menu_export_console(_, __): export_state(menu)
 def menu_export_file(_, __): export_state(menu, file=True)
 
 
-def menu_checkout(print_menu: Callable):
+def menu_checkout(print_menu: Callable, __):
     if len(list(filter(lambda item: item.count > 0, menu))) == 0:
         print_menu(
             cls=True, message=f"{Fore.RED}You must have at least one item in your order!{Style.RESET_ALL}",)
     checkout(menu)
 
 
-def menu_exit(print_menu: Callable, exit_menu: Callable): exit_menu()
+def menu_exit(_, exit_menu: Callable): exit_menu()
 
 
 welcomed = False

@@ -2,7 +2,7 @@ from typing import List, overload
 
 from colorama import Fore, Style  # type: ignore
 
-from util import Item
+from _util import Item
 
 
 def _error(message: str) -> None:
