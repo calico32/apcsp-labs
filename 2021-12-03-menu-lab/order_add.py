@@ -31,10 +31,10 @@ def order_add(menu: List[Item]) -> None:
         key = readkey()
         if interrupted(key):
             return
-        elif key == ARROW_UP:  # up arrow
+        elif key == ARROW_UP:
             selected = (selected - 1) % len(menu)
             print_menu(cls=True)
-        elif key == ARROW_DOWN:  # down arrow
+        elif key == ARROW_DOWN:
             selected = (selected + 1) % len(menu)
             print_menu(cls=True)
         elif key == '\r':  # enter

@@ -117,10 +117,10 @@ while True:
     key = readkey()
     if interrupted(key):
         exit_menu()
-    elif key == ARROW_UP:  # up arrow
+    elif key == ARROW_UP:
         menu_selected = (menu_selected - 1) % len(options)
         print_menu(cls=True)
-    elif key == ARROW_DOWN:  # down arrow
+    elif key == ARROW_DOWN:
         menu_selected = (menu_selected + 1) % len(options)
         print_menu(cls=True)
     elif key == '\r':  # enter

@@ -52,6 +52,7 @@ def random_order_id():
 def checkout(menu: List[Item]) -> None:
     if len(list(filter(lambda x: x.count > 0, menu))) == 0:
         _error('You must have at least one item in your order!')
+        return
 
     subtotal = sum(item.subtotal for item in menu)
 
