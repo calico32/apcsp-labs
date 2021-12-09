@@ -1,6 +1,7 @@
 from typing import List, overload
 
 from colorama import Fore, Style  # type: ignore
+from readchar import readkey  # type: ignore
 
 from _util import Item
 
@@ -80,3 +81,12 @@ def prompt_file(message: str) -> str:
             _error("File must be a .csv file.")
             file = None
     return file
+
+
+def press_any_key(message="Press any key to continue") -> None:
+    print()
+    print(Fore.GREEN + message + Style.RESET_ALL)
+    while True:
+        key = readkey()
+        if key:
+            break

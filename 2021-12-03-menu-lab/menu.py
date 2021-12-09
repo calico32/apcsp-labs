@@ -1,32 +1,23 @@
 import os
-from typing import Callable, List, Union
+from re import A
+from typing import Any, Callable, List, Optional, Union
 
 import colorama  # type: ignore
 from colorama import Fore, Style
 from readchar import readkey  # type: ignore
 
+from _util import (ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted,
+                   print_items)
 from checkout import checkout
-from edit import EditMode, edit_items
+from menu_edit import menu_add, menu_edit, menu_remove
 from order_add import order_add
 from order_remove import order_remove
 from state import export_state, import_state
-from _util import (ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted,
-                   print_items)
 
 colorama.init()
 
-
-menu = [
-    Item('Chocolate Cake', 650),
-    Item('Tiramisu', 1100),
-    Item('Coffee', 350),
-    Item('Donut', 250),
-    Item('Bread', 350),
-    Item('Pancakes', 500),
-    Item('Cookie', 250),
-    Item('Coffee Cake', 400),
-    Item('Cupcake', 300),
-]
+welcomed = False
+menu_selected = 0
 
 
 class MenuOption(object):
@@ -39,51 +30,51 @@ class MenuOption(object):
         self.run = run
 
 
-def menu_order_add(_, __): order_add(menu)
-def menu_order_remove(_, __): order_remove(menu)
-def menu_edit_add(_, __): edit_items(menu, EditMode.ADD)
-
-
-def menu_edit_remove(print_menu: Callable, __):
-    if len(menu) == 1:
-        print_menu(
-            cls=True, message=f"{Fore.RED}You must have at least one item in the menu!{Style.RESET_ALL}")
-    edit_items(menu, EditMode.REMOVE)
-
-
-def menu_edit_edit(_, __): edit_items(menu, EditMode.EDIT)
-def menu_import_console(_, __): import_state(menu)
-def menu_import_file(_, __): import_state(menu, file=True)
-def menu_export_console(_, __): export_state(menu)
-def menu_export_file(_, __): export_state(menu, file=True)
-
-
-def menu_checkout(print_menu: Callable, __):
-    if len(list(filter(lambda item: item.count > 0, menu))) == 0:
-        print_menu(
-            cls=True, message=f"{Fore.RED}You must have at least one item in your order!{Style.RESET_ALL}",)
-    checkout(menu)
-
-
-def menu_exit(_, exit_menu: Callable): exit_menu()
-
-
-welcomed = False
-
-menu_selected = 0
+menu = [
+    Item('Chocolate Cake',  650),
+    Item('Tiramisu',        1100),
+    Item('Coffee',          350),
+    Item('Donut',           250),
+    Item('Bread',           350),
+    Item('Pancakes',        500),
+    Item('Cookie',          250),
+    Item('Coffee Cake',     400),
+    Item('Cupcake',         300),
+]
 
 options = [
-    MenuOption("Ordering", "Add items to order",      menu_order_add),
-    MenuOption("",         "Remove items from order", menu_order_remove),
-    MenuOption("Menu",     "Add menu items",          menu_edit_add),
-    MenuOption("",         "Remove menu items",       menu_edit_remove),
-    MenuOption("",         "Edit menu items",         menu_edit_edit),
-    MenuOption("State",    "Import state from text",  menu_import_console),
-    MenuOption("",         "Import state from file",  menu_import_file),
-    MenuOption("",         "Export state to console", menu_export_console),
-    MenuOption("",         "Export state to file",    menu_export_file),
-    MenuOption("Checkout", "Checkout",                menu_checkout),
-    MenuOption("",         "Exit",                    menu_exit),
+    MenuOption("Ordering", "Add items to order",
+               lambda: order_add(menu)),
+
+    MenuOption("",         "Remove items from order",
+               lambda: order_remove(menu)),
+
+    MenuOption("Menu",     "Add menu items",
+               lambda: menu_add(menu)),
+
+    MenuOption("",         "Remove menu items",
+               lambda: menu_remove(menu)),
+
+    MenuOption("",         "Edit menu items",
+               lambda: menu_edit(menu)),
+
+    MenuOption("State",    "Import state from text",
+               lambda: import_state(menu)),
+
+    MenuOption("",         "Import state from file",
+               lambda: import_state(menu, file=True)),
+
+    MenuOption("",         "Export state to console",
+               lambda: export_state(menu)),
+
+    MenuOption("",         "Export state to file",
+               lambda: export_state(menu, file=True)),
+
+    MenuOption("Checkout", "Checkout",
+               lambda: checkout(menu)),
+
+    MenuOption("",         "Exit",
+               lambda: exit_menu()),
 ]
 
 
@@ -112,15 +103,15 @@ def print_menu(cls=False, message=None) -> None:
         )
 
 
-def exit_menu(actually_exit=True):
+def exit_menu() -> None:
     global menu_selected
     menu_selected = -1
     print_menu(cls=True)
-    if actually_exit:
-        exit()
+    exit()
 
 
 print_menu(cls=True)
+
 
 while True:
     key = readkey()
@@ -133,6 +124,12 @@ while True:
         menu_selected = (menu_selected + 1) % len(options)
         print_menu(cls=True)
     elif key == '\r':  # enter
-        options[menu_selected].run(print_menu, exit_menu)
+        previous_selected = menu_selected
+        menu_selected = -1
+        print_menu(cls=True)
+
+        menu_selected = previous_selected
+        options[menu_selected].run()
+
         welcomed = True
         print_menu(cls=True)

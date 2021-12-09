@@ -3,6 +3,8 @@ from typing import List, Tuple
 
 from colorama import Fore, Style  # type: ignore
 
+CURRENCY = '₿'
+
 
 class Item:
     name: str
@@ -16,7 +18,7 @@ class Item:
 
     @property
     def price_formatted(self) -> str:
-        return "{:.2f}".format(self.price / 100)
+        return f"{self.price / 100:.2f} {CURRENCY}"
 
     @property
     def subtotal(self) -> int:
@@ -24,7 +26,7 @@ class Item:
 
     @property
     def subtotal_formatted(self) -> str:
-        return "{:.2f}".format(self.subtotal / 100)
+        return f"{self.subtotal / 100:.2f} {CURRENCY}"
 
 
 def widths(menu: List[Item]) -> Tuple[int, int, int, int]:

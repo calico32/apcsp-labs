@@ -4,7 +4,8 @@ from typing import List, NewType
 from colorama import Fore, Style  # type: ignore
 from readchar import readkey  # type: ignore
 
-from _prompt import prompt_index, prompt_name, prompt_price
+from _prompt import (_error, press_any_key, prompt_index, prompt_name,
+                     prompt_price)
 from _util import (ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted,
                    print_items)
 
@@ -15,19 +16,10 @@ class EditMode(Enum):
     EDIT = 3
 
 
-def edit_items(menu: List[Item], mode: EditMode) -> None:
+def menu_add(menu: List[Item]) -> None:
     clear()
     banner(menu)
 
-    if mode == EditMode.ADD:
-        _edit_add(menu)
-    elif mode == EditMode.REMOVE:
-        _edit_remove(menu)
-    elif mode == EditMode.EDIT:
-        _edit_item(menu)
-
-
-def _edit_add(menu: List[Item]) -> None:
     print_items(menu)
 
     print(Fore.CYAN + Style.BRIGHT +
@@ -43,7 +35,15 @@ def _edit_add(menu: List[Item]) -> None:
         return
 
 
-def _edit_remove(menu: List[Item]) -> None:
+def menu_remove(menu: List[Item]) -> None:
+    if len(menu) == 1:
+        _error("You must have at least one item in the menu.")
+        press_any_key()
+        return
+
+    clear()
+    banner(menu)
+
     selected = 0
 
     def print_menu(cls=False) -> None:
@@ -75,7 +75,9 @@ def _edit_remove(menu: List[Item]) -> None:
             return
 
 
-def _edit_item(menu):
+def menu_edit(menu):
+    clear()
+    banner(menu)
     print_items(menu)
 
     selected = 0
@@ -86,7 +88,6 @@ def _edit_item(menu):
             banner(menu)
 
         print_items(menu, selected)
-
         print(Fore.CYAN + Style.BRIGHT +
               "Editing menu item (Ctrl+C to return)" + Style.RESET_ALL)
 
