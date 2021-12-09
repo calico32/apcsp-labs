@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, NewType
+from typing import List
 
 from colorama import Fore, Style  # type: ignore
 from readchar import readkey  # type: ignore
