@@ -3,7 +3,7 @@ from random import choice
 from string import ascii_uppercase, digits
 from typing import Callable, List, Tuple
 
-from _prompt import _error
+from _prompt import _error, press_any_key
 from _util import CURRENCY, Item, widths
 
 SALES_TAX = 0.06825
@@ -52,6 +52,8 @@ def random_order_id():
 def checkout(menu: List[Item]) -> None:
     if len(list(filter(lambda x: x.count > 0, menu))) == 0:
         _error('You must have at least one item in your order!')
+
+        press_any_key()
         return
 
     subtotal = sum(item.subtotal for item in menu)
