@@ -1,3 +1,5 @@
+# cart item adding
+
 from typing import List
 
 from colorama import Fore, Style  # type: ignore
@@ -7,6 +9,7 @@ from _util import (ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted,
                    print_items)
 
 
+# add items to the cart
 def order_add(menu: List[Item]) -> None:
     clear()
     banner(menu)
@@ -41,6 +44,8 @@ def order_add(menu: List[Item]) -> None:
             _prompt_quantity(menu, selected)
             return
 
+# ask for quantity
+
 
 def _prompt_quantity(menu: List[Item], selected: int) -> None:
     clear()
@@ -53,7 +58,8 @@ def _prompt_quantity(menu: List[Item], selected: int) -> None:
     try:
         while quantity is None:
             try:
-                value = int(input("Enter quantity to add: "))
+                value = int(
+                    input(Fore.GREEN + "Enter quantity to add: " + Style.RESET_ALL))
                 if value < 0:
                     raise ValueError
                 quantity = value

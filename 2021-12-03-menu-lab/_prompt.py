@@ -1,4 +1,6 @@
-from typing import List, overload
+# input prompting and validation
+
+from typing import List
 
 from colorama import Fore, Style  # type: ignore
 from readchar import readkey  # type: ignore
@@ -6,13 +8,18 @@ from readchar import readkey  # type: ignore
 from _util import Item
 
 
+# generic error message
 def _error(message: str) -> None:
     """Print error message in red"""
     print(Fore.RED + message + Style.RESET_ALL)
 
+# green prompt message
+
 
 def _prompt(message: str) -> str:
     return input(Fore.GREEN + message + Style.RESET_ALL)
+
+# prompt for item name
 
 
 def prompt_name(message: str) -> str:
@@ -29,6 +36,8 @@ def prompt_name(message: str) -> str:
             name = None
 
     return name
+
+# prompt for item price
 
 
 def prompt_price(message: str) -> int:
@@ -48,6 +57,8 @@ def prompt_price(message: str) -> int:
                 _error("Price must be a positive number.")
                 price = None
     return price
+
+# prompt for item index
 
 
 def prompt_index(menu: List[Item], message: str, allow_overflow=True) -> int:
@@ -70,6 +81,8 @@ def prompt_index(menu: List[Item], message: str, allow_overflow=True) -> int:
                 index = None
     return index
 
+# prompt for file name
+
 
 def prompt_file(message: str) -> str:
     file = None
@@ -81,6 +94,8 @@ def prompt_file(message: str) -> str:
             _error("File must be a .csv file.")
             file = None
     return file
+
+# press any key to continue prompt
 
 
 def press_any_key(message="Press any key to continue") -> None:

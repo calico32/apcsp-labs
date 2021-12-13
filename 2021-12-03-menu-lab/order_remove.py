@@ -1,12 +1,16 @@
+# cart item removal
+
 from typing import List
 
 from colorama import Fore, Style  # type: ignore
 from readchar import readkey  # type: ignore
 
+from _prompt import _error
 from _util import (ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted,
                    print_items)
 
 
+# remove items from the cart
 def order_remove(menu: List[Item]) -> None:
     clear()
     banner(menu)
@@ -41,6 +45,8 @@ def order_remove(menu: List[Item]) -> None:
             _prompt_quantity(menu, selected)
             return
 
+# ask for the quantity of the item to remove
+
 
 def _prompt_quantity(menu: List[Item], selected: int) -> None:
     clear()
@@ -58,8 +64,8 @@ def _prompt_quantity(menu: List[Item], selected: int) -> None:
                     raise ValueError
                 quantity = value
             except ValueError:
-                print(
-                    Fore.RED + "Invalid quantity. Please enter a positive integer less than or equal to the number of items in your order." + Style.RESET_ALL
+                _error(
+                    "Invalid quantity. Please enter a positive integer less than or equal to the number of items in your order."
                 )
 
         menu[selected].count -= quantity

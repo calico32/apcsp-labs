@@ -1,11 +1,19 @@
+# helpers, utilities, constants, etc.
+
 import os
 from typing import List, Tuple
 
 from colorama import Fore, Style  # type: ignore
 
+# currency symbol used in the menu
 CURRENCY = '₿'
 
+# arrow key escape sequences
+ARROW_UP = '\x1b[A'
+ARROW_DOWN = '\x1b[B'
 
+
+# item class, used to store item information and count
 class Item:
     name: str
     price: int
@@ -29,6 +37,7 @@ class Item:
         return f"{self.subtotal / 100:.2f} {CURRENCY}"
 
 
+# get the widths of the columns
 def widths(menu: List[Item]) -> Tuple[int, int, int, int]:
     index = len(str(len(menu))) + 1
     name = max(len(item.name) for item in menu)
@@ -37,25 +46,31 @@ def widths(menu: List[Item]) -> Tuple[int, int, int, int]:
     return max(index, 3), max(name, 4), max(price, 5), max(quantity, 3)
 
 
+# total width of the menu
 def width(menu: List[Item]) -> int:
     index, name, price, quantity = widths(menu)
     return index + 2 + name + 2 + price + 2 + quantity
 
+# columns for the table
+
 
 def columns(menu: List[Item]) -> str:
     index, name, price, quantity = map(str, widths(menu))
-    return '{:<' + index + '}  {:<' + name + '}  {:>' + price + '}  {:>' + quantity + '}'
+    return f'{{:<{index}}}  {{:<{name}}}  {{:>{price}}}  {{:>{quantity}}}'
 
 
+# clear the screen
 def clear() -> None:
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
+# print a separator
 def separator(menu: List[Item]) -> None:
     print(Style.RESET_ALL, end='')
     print('-' * width(menu))
 
 
+# menu banner
 def banner(menu: List[Item]) -> None:
     print(Style.RESET_ALL, end='')
     separator(menu)
@@ -88,13 +103,6 @@ def print_items(menu: List[Item], selected=None) -> None:
     separator(menu)
 
 
-def move_cursor(y: int, x: int) -> None:
-    print("\033[%d;%dH" % (y, x))
-
-
-ARROW_UP = '\x1b[A'
-ARROW_DOWN = '\x1b[B'
-
-
+# keypresses used for exiting current menu
 def interrupted(key: str) -> bool:
     return key in ['q', 'Q', '\x1b', '\x1b\x1b', '\x03', '\x04']

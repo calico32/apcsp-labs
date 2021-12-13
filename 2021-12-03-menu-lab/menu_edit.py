@@ -1,4 +1,5 @@
-from enum import Enum
+# menu editing functions
+
 from typing import List
 
 from colorama import Fore, Style  # type: ignore
@@ -10,16 +11,10 @@ from _util import (ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted,
                    print_items)
 
 
-class EditMode(Enum):
-    ADD = 1
-    REMOVE = 2
-    EDIT = 3
-
-
+# add a new item to the menu
 def menu_add(menu: List[Item]) -> None:
     clear()
     banner(menu)
-
     print_items(menu)
 
     print(Fore.CYAN + Style.BRIGHT +
@@ -34,8 +29,11 @@ def menu_add(menu: List[Item]) -> None:
     except KeyboardInterrupt:
         return
 
+# remove an item from the menu
+
 
 def menu_remove(menu: List[Item]) -> None:
+    # prevent the user from removing the last item
     if len(menu) == 1:
         _error("You must have at least one item in the menu.")
         press_any_key()
@@ -44,6 +42,7 @@ def menu_remove(menu: List[Item]) -> None:
     clear()
     banner(menu)
 
+    # current selection
     selected = 0
 
     def print_menu(cls=False) -> None:
@@ -71,8 +70,11 @@ def menu_remove(menu: List[Item]) -> None:
             selected = (selected + 1) % len(menu)
             print_menu(cls=True)
         elif key == '\r':  # enter
+            # remove the item
             menu.remove(menu[selected])
             return
+
+# edit an existing item in the menu
 
 
 def menu_edit(menu):
@@ -108,6 +110,8 @@ def menu_edit(menu):
         elif key == '\r':  # enter
             _edit_item_prompt(menu, selected)
             print_menu(cls=True)
+
+# individual item editing
 
 
 def _edit_item_prompt(menu: List[Item], index: int) -> None:

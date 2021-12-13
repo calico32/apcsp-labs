@@ -1,6 +1,6 @@
-import os
-from re import A
-from typing import Any, Callable, List, Optional, Union
+# menu entrypoint
+
+from typing import Callable
 
 import colorama  # type: ignore
 from colorama import Fore, Style
@@ -30,6 +30,7 @@ class MenuOption(object):
         self.run = run
 
 
+# default menu items
 menu = [
     Item('Chocolate Cake',  650),
     Item('Tiramisu',        1100),
@@ -42,6 +43,7 @@ menu = [
     Item('Cupcake',         300),
 ]
 
+# main menu options and their associated functions
 options = [
     MenuOption("Ordering", "Add items to order",
                lambda: order_add(menu)),
@@ -77,6 +79,8 @@ options = [
                lambda: exit_menu()),
 ]
 
+# print the menu and all the options (selected one highlighted)
+
 
 def print_menu(cls=False, message=None) -> None:
     if cls:
@@ -102,6 +106,9 @@ def print_menu(cls=False, message=None) -> None:
             f"  {Fore.CYAN + Style.BRIGHT + '>' if menu_selected == index else Style.RESET_ALL + ' '} {option.name}{Style.RESET_ALL}"
         )
 
+# set menu_selected to -1 and reprint the menu so that nothing is highlighted
+# exit
+
 
 def exit_menu() -> None:
     global menu_selected
@@ -112,24 +119,32 @@ def exit_menu() -> None:
 
 print_menu(cls=True)
 
-
+# menu loop
 while True:
+    # get one keypress
     key = readkey()
     if interrupted(key):
+        # ctrl-c, ctrl-d, q, or esc
         exit_menu()
     elif key == ARROW_UP:
+        # arrow up
         menu_selected = (menu_selected - 1) % len(options)
         print_menu(cls=True)
     elif key == ARROW_DOWN:
+        # arrow down
         menu_selected = (menu_selected + 1) % len(options)
         print_menu(cls=True)
-    elif key == '\r':  # enter
+    elif key == '\r':
+        # enter
+        # clear selected item
         previous_selected = menu_selected
         menu_selected = -1
         print_menu(cls=True)
 
         menu_selected = previous_selected
+        # run the function for the selected item
         options[menu_selected].run()
 
+        # hide welcome message on next iteration
         welcomed = True
         print_menu(cls=True)

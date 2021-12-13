@@ -1,3 +1,5 @@
+# checkout menu option
+
 from datetime import datetime
 from random import choice
 from string import ascii_uppercase, digits
@@ -7,6 +9,8 @@ from _prompt import _error, press_any_key
 from _util import CURRENCY, Item, widths
 
 SALES_TAX = 0.06825
+
+# receipt formatter
 
 
 class _ColumnFormatter:
@@ -35,6 +39,7 @@ class _ColumnFormatter:
         return f'| {{:>{self.w1}}} {{:<{self.w2}}} | {{:>{self.w3}}} |'.format(a1, a2, a3)
 
 
+# formatting helper functions
 def _formatter(w1: int, w2: int, w3: int) -> Tuple[_ColumnFormatter, Callable[..., None], Callable[..., None], Callable[..., None]]:
     fmt = _ColumnFormatter(w1, w2, w3)
 
@@ -44,24 +49,33 @@ def _formatter(w1: int, w2: int, w3: int) -> Tuple[_ColumnFormatter, Callable[..
 
     return fmt, c1, c2, c3
 
+# random order id generator
+
 
 def random_order_id():
     return ''.join(choice(ascii_uppercase + digits) for _ in range(8))
 
+# main checkout function
+
 
 def checkout(menu: List[Item]) -> None:
+    # no items in cart
     if len(list(filter(lambda x: x.count > 0, menu))) == 0:
         _error('You must have at least one item in your order!')
 
         press_any_key()
         return
 
+    # subtotal of all items (before tax)
     subtotal = sum(item.subtotal for item in menu)
-
+    # formatted subtotal
     subtotal_fmt = f"{subtotal / 100:.2f} {CURRENCY}"
+    # formatted tax percentage
     tax_fmt = f"{SALES_TAX * 100:.3f}%"
+    # formatted total, after tax
     total_fmt = f"{subtotal * (1 + SALES_TAX) / 100:.2f} {CURRENCY}"
 
+    # width of columns
     w1 = max(len(str(item.count)) for item in menu) + 1
     w2 = widths(menu)[1]
     w3 = max(
@@ -71,32 +85,42 @@ def checkout(menu: List[Item]) -> None:
         len(total_fmt),
     )
 
+    # top and bottom border
     border = f'+-{"-" * w1}-{"-" * w2}---{"-" * w3}-+'
+    # section separator
     separator = f'+-{"-" * w1}-{"-" * w2}-+-{"-" * w3}-+'
 
     fmt, c1, c2, c3 = _formatter(w1, w2, w3)
 
     print()
     print(border)
+
+    # header section
     c1('Copilot Cafe'.center(fmt.c1w))
     c1('*-*-*-*-*-*-*-*'.center(fmt.c1w))
     c1(datetime.now().strftime('%a %m/%d/%y %I:%M:%S %p').center(fmt.c1w))
     c1(f'Order ID: {random_order_id()}'.center(fmt.c1w))
-    print(separator)
-    c2('Item', 'Subtotal')
+
     print(separator)
 
+    # item section
+    c2('Item', 'Subtotal')
+    print(separator)
     for item in filter(lambda item: item.count > 0, menu):
         c3(f'{item.count}×', item.name, item.subtotal_formatted)
 
     print(separator)
+
+    # totals section
     c2('Subtotal'.rjust(fmt.c2w), subtotal_fmt)
     c2('Sales Tax'.rjust(fmt.c2w), tax_fmt)
     c2('Total'.rjust(fmt.c2w), total_fmt)
+
     print(separator)
 
+    # bottom section
     c1('Thank you for your order!'.center(fmt.c1w))
     c1('Please come again'.center(fmt.c1w))
-    print(border)
 
+    print(border)
     exit()

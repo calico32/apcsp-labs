@@ -1,14 +1,15 @@
+# program state import/export
 
 from re import match
 from typing import List
 
 from colorama import Fore, Style  # type: ignore
-from readchar import readkey  # type: ignore
 
-from _prompt import press_any_key, prompt_file
+from _prompt import _error, press_any_key, prompt_file
 from _util import Item
 
 
+# export current program state to CSV file (or stdout)
 def export_state(menu: List[Item], file=False) -> None:
     try:
         print()
@@ -35,6 +36,8 @@ def export_state(menu: List[Item], file=False) -> None:
     except KeyboardInterrupt:
         return
 
+# import CSV file to current program state, overwriting current state
+
 
 def import_state(menu: List[Item], file=False) -> None:
     saved_state = menu.copy()
@@ -48,7 +51,9 @@ def import_state(menu: List[Item], file=False) -> None:
                 with open(filename, "r") as f:
                     csv = f.read()
             except FileNotFoundError:
-                print(Fore.RED + 'Error: Invalid file' + Style.RESET_ALL)
+                _error('Error: Invalid file')
+                press_any_key()
+                return
         else:
             csv = input(
                 Fore.GREEN + "Enter CSV (empty line to stop): " + Style.RESET_ALL) + '\n'
@@ -71,12 +76,9 @@ def import_state(menu: List[Item], file=False) -> None:
 
         except Exception as e:
             print(Fore.RED + 'Error: ' + str(e) + Style.RESET_ALL)
+            # operation failed, restore previous state
             menu.clear()
             menu.extend(saved_state)
-        # except Exception:
-            # print(Fore.RED + 'Error: Unknown' + Style.RESET_ALL)
-            # menu.clear()
-            # menu.extend(saved_state)
 
         if file:
             print(Fore.GREEN + 'State imported from ' +
@@ -86,6 +88,7 @@ def import_state(menu: List[Item], file=False) -> None:
 
         press_any_key()
     except KeyboardInterrupt:
+        # operation cancelled, restore original state
         menu.clear()
         menu.extend(saved_state)
         return
