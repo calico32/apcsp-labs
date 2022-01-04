@@ -10,9 +10,8 @@ from _util import CURRENCY, Item, widths
 
 SALES_TAX = 0.06825
 
+
 # receipt formatter
-
-
 class _ColumnFormatter:
     w1: int
     w2: int
@@ -29,39 +28,51 @@ class _ColumnFormatter:
         self.c2w = countw + 1 + itemw
 
     def c1(self, a1) -> str:
-        return f'| {{:<{self.c1w}}} |'.format(a1)
+        return f"| {{:<{self.c1w}}} |".format(a1)
 
     def c2(self, a1, a2, separator=True) -> str:
-        return f'| {{:<{self.c2w}}} | {{:>{self.w3}}} |'.format(a1, a2) if separator else \
-               f'| {{:<{self.c2w}}}   {{:>{self.w3}}} |'.format(a1, a2)
+        return (
+            f"| {{:<{self.c2w}}} | {{:>{self.w3}}} |".format(a1, a2)
+            if separator
+            else f"| {{:<{self.c2w}}}   {{:>{self.w3}}} |".format(a1, a2)
+        )
 
     def c3(self, a1, a2, a3) -> str:
-        return f'| {{:>{self.w1}}} {{:<{self.w2}}} | {{:>{self.w3}}} |'.format(a1, a2, a3)
+        return f"| {{:>{self.w1}}} {{:<{self.w2}}} | {{:>{self.w3}}} |".format(
+            a1, a2, a3
+        )
 
 
 # formatting helper functions
-def _formatter(w1: int, w2: int, w3: int) -> Tuple[_ColumnFormatter, Callable[..., None], Callable[..., None], Callable[..., None]]:
+def _formatter(
+    w1: int, w2: int, w3: int
+) -> Tuple[
+    _ColumnFormatter, Callable[..., None], Callable[..., None], Callable[..., None]
+]:
     fmt = _ColumnFormatter(w1, w2, w3)
 
-    def c1(a1=''): print(fmt.c1(a1))
-    def c2(a1='', a2=''): print(fmt.c2(a1, a2))
-    def c3(a1='', a2='', a3=''): print(fmt.c3(a1, a2, a3))
+    def c1(a1=""):
+        print(fmt.c1(a1))
+
+    def c2(a1="", a2=""):
+        print(fmt.c2(a1, a2))
+
+    def c3(a1="", a2="", a3=""):
+        print(fmt.c3(a1, a2, a3))
 
     return fmt, c1, c2, c3
 
+
 # random order id generator
-
-
 def random_order_id():
-    return ''.join(choice(ascii_uppercase + digits) for _ in range(8))
+    return "".join(choice(ascii_uppercase + digits) for _ in range(8))
+
 
 # main checkout function
-
-
 def checkout(menu: List[Item]) -> None:
     # no items in cart
     if len(list(filter(lambda x: x.count > 0, menu))) == 0:
-        _error('You must have at least one item in your order!')
+        _error("You must have at least one item in your order!")
 
         press_any_key()
         return
@@ -96,31 +107,31 @@ def checkout(menu: List[Item]) -> None:
     print(border)
 
     # header section
-    c1('Copilot Cafe'.center(fmt.c1w))
-    c1('*-*-*-*-*-*-*-*'.center(fmt.c1w))
-    c1(datetime.now().strftime('%a %m/%d/%y %I:%M:%S %p').center(fmt.c1w))
-    c1(f'Order ID: {random_order_id()}'.center(fmt.c1w))
+    c1("Copilot Cafe".center(fmt.c1w))
+    c1("*-*-*-*-*-*-*-*".center(fmt.c1w))
+    c1(datetime.now().strftime("%a %m/%d/%y %I:%M:%S %p").center(fmt.c1w))
+    c1(f"Order ID: {random_order_id()}".center(fmt.c1w))
 
     print(separator)
 
     # item section
-    c2('Item', 'Subtotal')
+    c2("Item", "Subtotal")
     print(separator)
     for item in filter(lambda item: item.count > 0, menu):
-        c3(f'{item.count}×', item.name, item.subtotal_formatted)
+        c3(f"{item.count}×", item.name, item.subtotal_formatted)
 
     print(separator)
 
     # totals section
-    c2('Subtotal'.rjust(fmt.c2w), subtotal_fmt)
-    c2('Sales Tax'.rjust(fmt.c2w), tax_fmt)
-    c2('Total'.rjust(fmt.c2w), total_fmt)
+    c2("Subtotal".rjust(fmt.c2w), subtotal_fmt)
+    c2("Sales Tax".rjust(fmt.c2w), tax_fmt)
+    c2("Total".rjust(fmt.c2w), total_fmt)
 
     print(separator)
 
     # bottom section
-    c1('Thank you for your order!'.center(fmt.c1w))
-    c1('Please come again'.center(fmt.c1w))
+    c1("Thank you for your order!".center(fmt.c1w))
+    c1("Please come again".center(fmt.c1w))
 
     print(border)
     exit()

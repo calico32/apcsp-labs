@@ -6,8 +6,7 @@ from colorama import Fore, Style  # type: ignore
 from readchar import readkey  # type: ignore
 
 from _prompt import _error
-from _util import (ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted,
-                   print_items)
+from _util import ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted, print_items
 
 
 # remove items from the cart
@@ -24,10 +23,16 @@ def order_remove(menu: List[Item]) -> None:
 
         print_items(menu, selected)
 
-        print(Fore.CYAN + Style.BRIGHT +
-              "Removing items from your order (Ctrl+C to return)" + Style.RESET_ALL)
+        print(
+            Fore.CYAN
+            + Style.BRIGHT
+            + "Removing items from your order (Ctrl+C to return)"
+            + Style.RESET_ALL
+        )
 
-        print(Fore.GREEN + "Select the item you would like to remove." + Style.RESET_ALL)
+        print(
+            Fore.GREEN + "Select the item you would like to remove." + Style.RESET_ALL
+        )
 
     print_menu()
 
@@ -41,13 +46,12 @@ def order_remove(menu: List[Item]) -> None:
         elif key == ARROW_DOWN:
             selected = (selected + 1) % len(menu)
             print_menu(cls=True)
-        elif key == '\r':  # enter
+        elif key == "\r":  # enter
             _prompt_quantity(menu, selected)
             return
 
+
 # ask for the quantity of the item to remove
-
-
 def _prompt_quantity(menu: List[Item], selected: int) -> None:
     clear()
     banner(menu)
@@ -59,13 +63,15 @@ def _prompt_quantity(menu: List[Item], selected: int) -> None:
         while quantity is None:
             try:
                 value = int(
-                    input(Fore.GREEN + "Enter quantity to remove: " + Style.RESET_ALL))
+                    input(Fore.GREEN + "Enter quantity to remove: " + Style.RESET_ALL)
+                )
                 if value < 0 or value > menu[selected].count:
                     raise ValueError
                 quantity = value
             except ValueError:
                 _error(
-                    "Invalid quantity. Please enter a positive integer less than or equal to the number of items in your order."
+                    "Invalid quantity. Please enter a positive integer less than or"
+                    " equal to the number of items in your order."
                 )
 
         menu[selected].count -= quantity

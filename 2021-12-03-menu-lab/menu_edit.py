@@ -5,10 +5,8 @@ from typing import List
 from colorama import Fore, Style  # type: ignore
 from readchar import readkey  # type: ignore
 
-from _prompt import (_error, press_any_key, prompt_index, prompt_name,
-                     prompt_price)
-from _util import (ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted,
-                   print_items)
+from _prompt import _error, press_any_key, prompt_index, prompt_name, prompt_price
+from _util import ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted, print_items
 
 
 # add a new item to the menu
@@ -17,8 +15,12 @@ def menu_add(menu: List[Item]) -> None:
     banner(menu)
     print_items(menu)
 
-    print(Fore.CYAN + Style.BRIGHT +
-          "Adding menu item (Ctrl+C to return)" + Style.RESET_ALL)
+    print(
+        Fore.CYAN
+        + Style.BRIGHT
+        + "Adding menu item (Ctrl+C to return)"
+        + Style.RESET_ALL
+    )
 
     try:
         name = prompt_name("Enter item name: ")
@@ -29,9 +31,8 @@ def menu_add(menu: List[Item]) -> None:
     except KeyboardInterrupt:
         return
 
+
 # remove an item from the menu
-
-
 def menu_remove(menu: List[Item]) -> None:
     # prevent the user from removing the last item
     if len(menu) == 1:
@@ -52,10 +53,16 @@ def menu_remove(menu: List[Item]) -> None:
 
         print_items(menu, selected)
 
-        print(Fore.CYAN + Style.BRIGHT +
-              "Removing menu item (Ctrl+C to return)" + Style.RESET_ALL)
+        print(
+            Fore.CYAN
+            + Style.BRIGHT
+            + "Removing menu item (Ctrl+C to return)"
+            + Style.RESET_ALL
+        )
 
-        print(Fore.GREEN + "Select the item you would like to remove." + Style.RESET_ALL)
+        print(
+            Fore.GREEN + "Select the item you would like to remove." + Style.RESET_ALL
+        )
 
     print_menu(cls=True)
 
@@ -69,14 +76,13 @@ def menu_remove(menu: List[Item]) -> None:
         elif key == ARROW_DOWN:
             selected = (selected + 1) % len(menu)
             print_menu(cls=True)
-        elif key == '\r':  # enter
+        elif key == "\r":  # enter
             # remove the item
             menu.remove(menu[selected])
             return
 
+
 # edit an existing item in the menu
-
-
 def menu_edit(menu):
     clear()
     banner(menu)
@@ -90,8 +96,12 @@ def menu_edit(menu):
             banner(menu)
 
         print_items(menu, selected)
-        print(Fore.CYAN + Style.BRIGHT +
-              "Editing menu item (Ctrl+C to return)" + Style.RESET_ALL)
+        print(
+            Fore.CYAN
+            + Style.BRIGHT
+            + "Editing menu item (Ctrl+C to return)"
+            + Style.RESET_ALL
+        )
 
         print(Fore.GREEN + "Select the item you would like to edit." + Style.RESET_ALL)
 
@@ -107,27 +117,29 @@ def menu_edit(menu):
         elif key == ARROW_DOWN:
             selected = (selected + 1) % len(menu)
             print_menu(cls=True)
-        elif key == '\r':  # enter
+        elif key == "\r":  # enter
             _edit_item_prompt(menu, selected)
             print_menu(cls=True)
 
+
 # individual item editing
-
-
 def _edit_item_prompt(menu: List[Item], index: int) -> None:
     item = menu[index]
 
     def options():
         return [
-            'Name: ' + item.name,
-            'Price: ' + item.price_formatted,
-            'Index: ' + str(index),
+            "Name: " + item.name,
+            "Price: " + item.price_formatted,
+            "Index: " + str(index),
         ]
 
     selected = 0
 
     def editing_message():
-        return f"{Fore.CYAN}{Style.BRIGHT}Editing item: {item.name} (Ctrl+C to return) {Style.RESET_ALL}"
+        return (
+            f"{Fore.CYAN}{Style.BRIGHT}Editing item: {item.name} (Ctrl+C to return)"
+            f" {Style.RESET_ALL}"
+        )
 
     def print_options(edit_index: int) -> None:
         clear()
@@ -136,7 +148,9 @@ def _edit_item_prompt(menu: List[Item], index: int) -> None:
 
         print(editing_message())
 
-        print(Fore.GREEN + 'Select the property you would like to edit.' + Style.RESET_ALL)
+        print(
+            Fore.GREEN + "Select the property you would like to edit." + Style.RESET_ALL
+        )
 
         for index, option in enumerate(options()):
             print(
@@ -156,7 +170,7 @@ def _edit_item_prompt(menu: List[Item], index: int) -> None:
             elif key == ARROW_DOWN:
                 selected = (selected + 1) % len(options())
                 print_options(index)
-            elif key == '\r':  # enter
+            elif key == "\r":  # enter
                 clear()
                 banner(menu)
                 print_items(menu, index)
@@ -167,7 +181,8 @@ def _edit_item_prompt(menu: List[Item], index: int) -> None:
                     item.price = prompt_price("Enter item price: ")
                 elif selected == 2:
                     new_index = prompt_index(
-                        menu, "Enter item index: ", allow_overflow=False)
+                        menu, "Enter item index: ", allow_overflow=False
+                    )
                     menu.remove(item)
                     menu.insert(new_index, item)
                     index = new_index

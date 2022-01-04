@@ -1,20 +1,20 @@
 # units to convert to, least to greatest
 units = [
-    ('minute', 60),
-    ('hour', 60),
-    ('day', 24),
-    ('year', 365),
+    ("minute", 60),
+    ("hour", 60),
+    ("day", 24),
+    ("year", 365),
 ]
 
 
 # join list of strings with commas
 def comma_separated_and(l: list[str]) -> str:
     if len(l) == 0:
-        return ''
+        return ""
     elif len(l) == 1:
         return l[0]
     elif len(l) == 2:
-        return f'{l[0]} and {l[1]}'
+        return f"{l[0]} and {l[1]}"
     else:
         return f'{", ".join(l[:-1])}, and {l[-1]}'
 
@@ -30,7 +30,7 @@ def format_units(values: list[tuple[int, str]]) -> str:
 
 # convert seconds to units
 def calculate_units(seconds: int) -> str:
-    values: list[tuple[int, str]] = [(seconds, 'second')]
+    values: list[tuple[int, str]] = [(seconds, "second")]
 
     for name, conversion in units:
         current_count, current_name = values[0]
@@ -45,11 +45,11 @@ def calculate_units(seconds: int) -> str:
     return format_units(values)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     try:
         seconds = int(input("Enter seconds (int): "))
     except ValueError:
         print("Invalid input. Exiting.")
         exit(1)
 
-    print(f'{seconds} seconds is equal to {calculate_units(seconds)}')
+    print(f"{seconds} seconds is equal to {calculate_units(seconds)}")

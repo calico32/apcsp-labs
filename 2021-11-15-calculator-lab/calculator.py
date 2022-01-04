@@ -8,6 +8,7 @@ init()
 # getch function
 try:
     import msvcrt
+
     getch = msvcrt.getch  # type: ignore
 except:
     import sys
@@ -20,7 +21,7 @@ except:
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
         try:
-            tty.setraw(sys.stdin.fileno())          # Raw read
+            tty.setraw(sys.stdin.fileno())  # Raw read
             ch = sys.stdin.read(1)
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
@@ -30,13 +31,15 @@ except:
 
 
 def error(text: str) -> None:
-    """ Print error message """
+    """Print error message"""
     print(f"{Fore.RED}{text}{Fore.RESET}")
 
 
 def prompt(text: str, required=True) -> str:
-    """ Print prompt message and wait for input """
-    def get_input(): return input(f"{Fore.BLUE}{text} > {Fore.RESET}")
+    """Print prompt message and wait for input"""
+
+    def get_input():
+        return input(f"{Fore.BLUE}{text} > {Fore.RESET}")
 
     if required:
         value = None
@@ -49,9 +52,10 @@ def prompt(text: str, required=True) -> str:
 
 
 def prompt_single(text: str, required=True) -> str:
-    """ Print prompt message and wait for single character """
+    """Print prompt message and wait for single character"""
+
     def get_input():
-        print(f"{Fore.BLUE}{text} > {Fore.RESET}", end='', flush=True)
+        print(f"{Fore.BLUE}{text} > {Fore.RESET}", end="", flush=True)
         char = getch()
         print(char)
         return char
@@ -85,9 +89,9 @@ while True:
 
         result: Optional[Union[float, int]] = None
 
-        if operator == '!':
+        if operator == "!":
             if first_number % 1 != 0:
-                error('Cannot take factorial of a non-integer')
+                error("Cannot take factorial of a non-integer")
                 print()
                 continue
 
@@ -96,7 +100,8 @@ while True:
                 result *= i
 
             print(
-                f'{Fore.GREEN}{int(first_number)}! => {Style.BRIGHT}{"{:,}".format(result)}{Fore.RESET}{Style.RESET_ALL}'
+                f"{Fore.GREEN}{int(first_number)}! =>"
+                f' {Style.BRIGHT}{"{:,}".format(result)}{Fore.RESET}{Style.RESET_ALL}'
             )
             print()
             continue
@@ -110,25 +115,28 @@ while True:
             result = first_number - second_number
         elif operator == "*":
             result = first_number * second_number
-        elif operator == '/':
+        elif operator == "/":
             result = first_number / second_number
         elif operator == "^":
             result = first_number ** second_number
 
-        print(f'{Fore.GREEN}{first_number} {operator} {second_number} => {Style.BRIGHT}{"{:,}".format(result)}{Fore.RESET}{Style.RESET_ALL}')
+        print(
+            f"{Fore.GREEN}{first_number} {operator} {second_number} =>"
+            f' {Style.BRIGHT}{"{:,}".format(result)}{Fore.RESET}{Style.RESET_ALL}'
+        )
         print()
     except ValueError:
-        error('Invalid number')
+        error("Invalid number")
         print()
         continue
     except ZeroDivisionError:
-        error('Cannot divide by zero')
+        error("Cannot divide by zero")
         print()
         continue
     except (KeyboardInterrupt, EOFError):
-        print('\nBye!')
+        print("\nBye!")
         break
     except Exception as e:
-        error('Error encountered:' + str(e))
+        error("Error encountered:" + str(e))
         print()
         continue

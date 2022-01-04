@@ -6,3 +6,5 @@ __pycache__
 .elixir_ls
 *.spec.md
 *.csv
+
+/donut*

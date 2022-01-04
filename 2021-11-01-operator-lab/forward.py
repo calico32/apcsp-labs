@@ -4,9 +4,7 @@ minutes = int(input("Enter the number of minutes: "))
 seconds = int(input("Enter the number of seconds: "))
 
 # input output format: hours, minutes, or seconds
-format = input(
-    "Enter the format you want to output (hours, minutes, seconds): "
-)
+format = input("Enter the format you want to output (hours, minutes, seconds): ")
 
 if format == "hours":
     result = hours + (minutes / 60) + (seconds / 3600)
@@ -18,7 +16,7 @@ else:
     print("Invalid format")
     exit()
 
-print(f'{hours}h{minutes}m{seconds}s is equal to {result} seconds')
+print(f"{hours}h{minutes}m{seconds}s is equal to {result} seconds")
 
 
 # thank you copilot

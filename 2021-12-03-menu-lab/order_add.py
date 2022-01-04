@@ -5,8 +5,7 @@ from typing import List
 from colorama import Fore, Style  # type: ignore
 from readchar import readkey  # type: ignore
 
-from _util import (ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted,
-                   print_items)
+from _util import ARROW_DOWN, ARROW_UP, Item, banner, clear, interrupted, print_items
 
 
 # add items to the cart
@@ -23,8 +22,12 @@ def order_add(menu: List[Item]) -> None:
 
         print_items(menu, selected)
 
-        print(Fore.CYAN + Style.BRIGHT +
-              "Adding items to your order (Ctrl+C to return)" + Style.RESET_ALL)
+        print(
+            Fore.CYAN
+            + Style.BRIGHT
+            + "Adding items to your order (Ctrl+C to return)"
+            + Style.RESET_ALL
+        )
 
         print(Fore.GREEN + "Select the item you would like to add." + Style.RESET_ALL)
 
@@ -40,13 +43,12 @@ def order_add(menu: List[Item]) -> None:
         elif key == ARROW_DOWN:
             selected = (selected + 1) % len(menu)
             print_menu(cls=True)
-        elif key == '\r':  # enter
+        elif key == "\r":  # enter
             _prompt_quantity(menu, selected)
             return
 
+
 # ask for quantity
-
-
 def _prompt_quantity(menu: List[Item], selected: int) -> None:
     clear()
     banner(menu)
@@ -59,7 +61,8 @@ def _prompt_quantity(menu: List[Item], selected: int) -> None:
         while quantity is None:
             try:
                 value = int(
-                    input(Fore.GREEN + "Enter quantity to add: " + Style.RESET_ALL))
+                    input(Fore.GREEN + "Enter quantity to add: " + Style.RESET_ALL)
+                )
                 if value < 0:
                     raise ValueError
                 quantity = value

@@ -10,25 +10,25 @@ def c_to_f(c: float):
     return f
 
 
-if __name__ == '__main__':
-    source: str = ''
+if __name__ == "__main__":
+    source: str = ""
     while not source:
         source = input("Enter source temperature (e.g. 32f, 16.3C): ").lower()
 
     try:
-        if source.endswith('f'):
+        if source.endswith("f"):
             value = float(source[:-1])
-            source = f'{value}°F'
-            result = f'{round(f_to_c(value), 2)}°C'
-        elif source.endswith('c'):
+            source = f"{value}°F"
+            result = f"{round(f_to_c(value), 2)}°C"
+        elif source.endswith("c"):
             value = float(source[:-1])
-            source = f'{value}°C'
-            result = f'{round(c_to_f(value), 2)}°F'
+            source = f"{value}°C"
+            result = f"{round(c_to_f(value), 2)}°F"
         else:
-            print('Invalid unit')
+            print("Invalid unit")
             exit()
     except ValueError:
         print("Invalid number")
         exit()
 
-    print(f'{source} is equal to {result}')
+    print(f"{source} is equal to {result}")
