@@ -59,8 +59,13 @@ def import_state(menu: List[Item], file=False) -> None:
                 input(Fore.GREEN + "Enter CSV (empty line to stop): " + Style.RESET_ALL)
                 + "\n"
             )
-            while (line := input(Fore.GREEN + "> " + Style.RESET_ALL)).strip() != "":
-                csv += line + "\n"
+            done = False
+            while not done:
+                line = input(Fore.GREEN + "> " + Style.RESET_ALL).strip()
+                if line == "":
+                    done = True
+                else:
+                    csv += line + "\n"
 
         print("-")
         print(csv)
