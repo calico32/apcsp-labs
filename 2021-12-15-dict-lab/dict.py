@@ -67,7 +67,6 @@ def build_dict() -> Dict[str, List[Definition]]:
                 output[spelling] = []
                 add_definition(output, spelling, obj["meanings"])
         else:
-
             output[obj["word"]] = []
             add_definition(output, obj["word"], obj["meanings"])
 
@@ -101,6 +100,7 @@ def print_definitions(word: str) -> None:
         print(
             f"{Fore.CYAN}{index + 1}."
             f' {", ".join([WORD_TYPES[t] for t in definition.word_types])}'
+            f"{definition.unofficial and ' (unofficial)' or ''}"
         )
         print(f"{Fore.YELLOW}{definition.definition}{Style.RESET_ALL}")
         print()
