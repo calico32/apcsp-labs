@@ -30,17 +30,21 @@ class MenuOption(object):
 
 
 # default menu items
-menu = [
-    Item("Chocolate Cake", 650),
-    Item("Tiramisu", 1100),
-    Item("Coffee", 350),
-    Item("Donut", 250),
-    Item("Bread", 350),
-    Item("Pancakes", 500),
-    Item("Cookie", 250),
-    Item("Coffee Cake", 400),
-    Item("Cupcake", 300),
-]
+# i guess i have to use a dict somewhere
+menu_data = {
+    "Chocolate Cake": 650,
+    "Tiramisu": 1100,
+    "Coffee": 350,
+    "Donut": 250,
+    "Bread": 350,
+    "Pancakes": 500,
+    "Cookie": 250,
+    "Coffee Cake": 400,
+    "Cupcake": 300,
+}
+
+
+menu = [Item(name, menu_data[name]) for name in menu_data]
 
 # main menu options and their associated functions
 options = [
@@ -60,11 +64,10 @@ options = [
 # print the menu and all the options (selected one highlighted)
 
 
-def print_menu(cls=False, message=None) -> None:
-    if cls:
-        clear()
-        banner(menu)
-        print_items(menu)
+def print_menu(message=None) -> None:
+    clear()
+    banner(menu)
+    print_items(menu)
 
     if not welcomed:
         print(Fore.GREEN + "Welcome to Copilot Café!" + Style.RESET_ALL)
@@ -90,11 +93,11 @@ def print_menu(cls=False, message=None) -> None:
 def exit_menu() -> None:
     global menu_selected
     menu_selected = -1
-    print_menu(cls=True)
+    print_menu()
     exit()
 
 
-print_menu(cls=True)
+print_menu()
 
 # menu loop
 while True:
@@ -106,17 +109,17 @@ while True:
     elif key == ARROW_UP:
         # arrow up
         menu_selected = (menu_selected - 1) % len(options)
-        print_menu(cls=True)
+        print_menu()
     elif key == ARROW_DOWN:
         # arrow down
         menu_selected = (menu_selected + 1) % len(options)
-        print_menu(cls=True)
+        print_menu()
     elif key == "\r":
         # enter
         # clear selected item
         previous_selected = menu_selected
         menu_selected = -1
-        print_menu(cls=True)
+        print_menu()
 
         menu_selected = previous_selected
         # run the function for the selected item
@@ -124,4 +127,4 @@ while True:
 
         # hide welcome message on next iteration
         welcomed = True
-        print_menu(cls=True)
+        print_menu()
