@@ -107,18 +107,18 @@ while True:
             continue
 
         # get the second number
-        second_number = float(prompt("Enter second number"))
+        second_number = prompt("Enter second number")
 
         if operator == "+":
-            result = first_number + second_number
+            result = first_number + float(second_number)
         elif operator == "-":
-            result = first_number - second_number
+            result = first_number - float(second_number)
         elif operator == "*":
-            result = first_number * second_number
+            result = first_number * float(second_number)
         elif operator == "/":
-            result = first_number / second_number
+            result = first_number / float(second_number)
         elif operator == "^":
-            result = first_number ** second_number
+            result = pow(int(first_number), int(second_number))
 
         print(
             f"{Fore.GREEN}{first_number} {operator} {second_number} =>"
@@ -137,6 +137,6 @@ while True:
         print("\nBye!")
         break
     except Exception as e:
-        error("Error encountered:" + str(e))
+        error("Error encountered: " + str(e))
         print()
         continue
