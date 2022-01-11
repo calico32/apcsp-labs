@@ -2,6 +2,6 @@
 
 ## demo
 
-`python ./bank.py`
+cd to root of project and run `python -m apcsp.labs.bank`
 
-see [bank.py](./bank.py)
+see [\_\_main\_\_.py](./__main__.py)
