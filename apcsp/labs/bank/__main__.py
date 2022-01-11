@@ -1,23 +1,6 @@
 import os
-from typing import List
 
-from .account import Account
 from .account_types import CheckingAccount, SavingsAccount, UserAccount
-from .bank_ui import ui_main
-
-os.system("clear")
-
-
-class Bank:
-    _accounts: List[Account]
-    _users: List[UserAccount]
-
-    def __init__(self):
-        self._accounts = []
-        self._users = []
-
-
-bank = Bank()
 
 alice = UserAccount("Alice")
 alice_savings = SavingsAccount(alice, "Primary Savings")
@@ -42,4 +25,29 @@ bob_savings.transfer(alice_checking, 500000_00)
 
 bob_savings.add_interest(1_0525)
 
-ui_main(bank)
+print(alice.str())
+print(bob.str())
+print(charlie.str())
+
+# Output:
+"""
+User Account: Alice (u0)
+    Primary Savings (savings, s0): $1,000.00
+        +$1,000.00 - Deposit
+    Checking Account (checking, c0): $501,523.23
+        +$1,523.23 - Paycheck
+        +$500,000.00 - Transfer from Savings Account (s1) owned by Bob (u1)
+User Account: Bob (u1)
+    Savings Account (savings, s1): $505,499.52
+        +$1,000.00 - Deposit
+        +$1,000,000.00 - Deposit
+        -$765.44 - Overdraft from Checking Account - New PC
+        -$500,000.00 - Transfer to Checking Account (c0) owned by Alice (u0)
+        +$5,264.96 - Interest of 1.525%
+    Checking Account (checking, c1): -$25.00
+        +$1,234.56 - Paycheck
+        -$1,234.56 - Overdraft partial - New PC
+        -$25.00 - Fee for overdraft from Savings Account - New PC
+User Account: Charlie (u2)
+    No accounts
+"""
