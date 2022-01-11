@@ -1,8 +1,8 @@
-/*-rust
-/*-ts
+*_rust
+*_ts
 *.ipynb
 __pycache__
-/*-ex
+*_ex
 .elixir_ls
 *.spec.md
 *.csv

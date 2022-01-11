@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from account import Account, BalanceAccount
+from .account import Account, BalanceAccount
 
 OVERDRAFT_FEE = 25_00
 

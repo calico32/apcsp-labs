@@ -1,6 +1,6 @@
 from typing import List, Literal, Tuple
 
-from util import create_id, format_amount
+from .util import create_id, format_amount
 
 
 def format_name(acc: "Account", in_relation_to: "Account | None" = None) -> str:

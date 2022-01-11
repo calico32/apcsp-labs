@@ -1,4 +1,3 @@
-import random
 from typing import Dict, Literal
 
 id_counters: Dict[str, int] = {}
