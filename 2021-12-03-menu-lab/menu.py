@@ -41,8 +41,21 @@ menu_data = {
     "Cookie": 250,
     "Coffee Cake": 400,
     "Cupcake": 300,
+    "Coffee Latte": 450,
+    "Cappuccino": 500,
+    "Tea": 250,
+    "Green Tea": 200,
+    "Black Tea": 150,
+    "Iced Coffee": 350,
+    "Iced Tea": 250,
+    "Iced Coffee Latte": 450,
+    "Iced Cappuccino": 500,
+    "Frozen Yogurt": 300,
+    "Frozen Shake": 350,
+    "Frozen Pastry": 500,
+    "Frozen Smoothie": 600,
+    "Frozen Yogurt": 300,
 }
-
 
 menu = [Item(name, menu_data[name]) for name in menu_data]
 
