@@ -1,11 +1,11 @@
 from typing import TYPE_CHECKING, List
 
+from apcsp.ui import action, form, obj, selectable, util
+from colorama import Cursor  # type: ignore
 from readchar import readkey  # type: ignore
 
-from . import action, obj, selectable, util
-
 if TYPE_CHECKING:
-    from . import context
+    from apcsp.ui import context
 
 
 class Menu(object):
@@ -21,6 +21,14 @@ class Menu(object):
                 break
             self.selected += 1
 
+    @property
+    def fields(self) -> List[form.FormField]:
+        fields: List[form.FormField] = []
+        for o in self.objects:
+            if isinstance(o, form.FormField):
+                fields.append(o)
+        return fields
+
     def cursor_up(self) -> None:
         while True:
             self.selected = (self.selected - 1) % len(self.objects)
@@ -33,22 +41,25 @@ class Menu(object):
             if isinstance(self.objects[self.selected], selectable.Selectable):
                 break
 
-    def lines(self, context: "context.MenuContext") -> List[str]:
-        parent = context.parent
+    def lines(self, ctx: "context.MenuContext") -> List[str]:
+        parent = ctx.parent
 
         if parent:
-            parent_lines = parent.lines(context)  # TODO
+            parent_lines = parent.menu.lines(parent)  # TODO
             parent_width = max(util.strlen(s) for s in [*parent_lines, ""]) + 1
 
         lines = []
 
         for index, option in enumerate(self.objects):
+            if isinstance(option, obj.HiddenObject):
+                continue
+
             line = ""
 
             spec = ""
+            spec += str(self.selected) + ","
             spec += ">" if self.selected == index else " "
-            if isinstance(option, (obj.Title, obj.Category, selectable.Button)):
-                line += format(option)
+            line += format(option, spec)
 
             lines.append(line)
 
@@ -70,32 +81,51 @@ class Menu(object):
 
         return lines
 
-    def print(self, context: "context.MenuContext") -> str:
-        util.clear()
-        return "\n".join(self.lines(context))
+    def print(self, ctx: "context.MenuContext", clear: bool = True) -> str:
+        if clear:
+            util.clear()
+        else:
+            print(Cursor.POS(0, 0), end="")
+        out = "\n".join(self.lines(ctx))
+        print(out)
+        print()
+        return out
 
-    def run(self, context: "context.MenuContext") -> None:
-        self.print(context)
+    def run(self, ctx: "context.MenuContext") -> None:
+        if ctx.exit_next:
+            return
+
+        self.print(ctx)
         while True:
+            if ctx.exit_next:
+                return
+
             key = readkey()
             if util.interrupted(key):
+                for obj in self.objects:
+                    if isinstance(obj, action.MenuAction):
+                        if obj.type == "_interrupt":
+                            obj.execute(ctx)
+                            return
                 return
             elif key == util.ARROW_UP:
                 self.cursor_up()
-                self.print(context)
+                self.print(ctx)
             elif key == util.ARROW_DOWN:
                 self.cursor_down()
-                self.print(context)
+                self.print(ctx)
             elif key == "\r":
                 assert isinstance(
                     (opt := self.objects[self.selected]), selectable.Selectable
                 )
 
-                opt.select(context)
+                opt.select(ctx)
 
-                self.print(context)
+                self.print(ctx)
             else:
-                for obj in self.objects:
+                for index, obj in enumerate(self.objects):
                     if isinstance(obj, action.MenuAction) and obj.key == key:
-                        obj.run(context)
-                        break
+                        obj.run(ctx)
+
+                    if index == self.selected and isinstance(obj, form.KeyReceiver):
+                        obj.on_key(key, ctx)
