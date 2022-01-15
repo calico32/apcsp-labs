@@ -1,5 +1,7 @@
 from typing import List, Literal, Tuple
 
+from colorama import Fore, Style  # type: ignore
+
 from .util import create_id, format_amount
 
 
@@ -33,7 +35,11 @@ class Transaction:
         self.description = description
 
     def str(self, indent=0) -> str:
-        return f"{' ' * indent}{format_amount(self.amount)} - {self.description}"
+        color = Fore.GREEN if self.amount > 0 else Fore.RED
+        return (
+            f"{' ' * indent}{color}{format_amount(self.amount)}{Style.RESET_ALL} -"
+            f" {self.description}"
+        )
 
 
 class Account:
@@ -105,6 +111,8 @@ class BalanceAccount(Account):
             return header
 
     def _post(self, amount: int, description: str) -> None:
+        if amount == 0:
+            return
         self._transactions.append(Transaction(amount, description))
 
     def deposit(self, amount: int, description: str | None = None) -> None:

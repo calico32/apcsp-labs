@@ -1,3 +1,5 @@
+from hashlib import pbkdf2_hmac
+from secrets import token_bytes
 from typing import List, Optional
 
 from .account import Account, BalanceAccount
@@ -51,7 +53,7 @@ class CheckingAccount(BalanceAccount):
                 raise ValueError("Insufficient funds")
         else:
             self._balance -= amount
-            self._post(amount, description or "Withdrawal")
+            self._post(-amount, description or "Withdrawal")
 
 
 class SavingsAccount(BalanceAccount):
@@ -73,20 +75,52 @@ class SavingsAccount(BalanceAccount):
         return amount
 
 
-class UserAccount(Account):
-    _accounts: List[CheckingAccount | SavingsAccount]
+PBKDF2_ROUNDS = 100_000
 
-    def __init__(self, name: str) -> None:
+UserHoldableAccount = CheckingAccount | SavingsAccount
+
+
+def pbkdf2(password: str, salt: bytes) -> bytes:
+    return pbkdf2_hmac("sha256", password.encode("utf-8"), salt, PBKDF2_ROUNDS)
+
+
+class UserAccount(Account):
+    _accounts: List[UserHoldableAccount]
+
+    def __init__(self, name: str, username: str, password: str, pin: str) -> None:
         super().__init__("user", name)
         self._accounts = []
+        self._username = username
+        self._salt = token_bytes(32)
+        self._password = pbkdf2(password, self._salt)
+        self._pin = pbkdf2(pin, self._salt)
+
+    @property
+    def username(self) -> str:
+        return self._username
 
     @property
     def type(self) -> str:
         return "user"
 
     @property
-    def accounts(self) -> List[CheckingAccount | SavingsAccount]:
+    def accounts(self) -> List[UserHoldableAccount]:
         return self._accounts
+
+    def login(self, password: str) -> bool:
+        return self._password == pbkdf2(password, self._salt)
+
+    def set_password(self, password: str) -> None:
+        self._password = pbkdf2(password, self._salt)
+
+    def set_pin(self, pin: str) -> None:
+        self._pin = pbkdf2(pin, self._salt)
+
+    def check_pin(self, pin: str) -> bool:
+        return self._pin == pbkdf2(pin, self._salt)
+
+    def close_account(self, account: UserHoldableAccount) -> None:
+        self._accounts.remove(account)
 
     def str(self, indent: int = 0) -> str:
         header = f"{' ' * indent}User Account: {self.name} ({self.id})"
