@@ -7,9 +7,9 @@ from apcsp.ui import obj
 from colorama import Fore, Style  # type: ignore
 
 if TYPE_CHECKING:
-    from apcsp.ui import context, menu
+    from apcsp.ui import context, form, menu
 
-FormResult = Dict[str, str | float | int]
+FormResult = Dict[str, "form.FormField"]
 
 
 class Selectable(obj.MenuObject, metaclass=ABCMeta):

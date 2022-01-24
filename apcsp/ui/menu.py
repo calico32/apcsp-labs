@@ -45,6 +45,7 @@ class Menu(object):
         parent = ctx.parent
 
         if parent:
+            assert parent.menu, "Parent context has no menu"
             parent_lines = parent.menu.lines(parent)  # TODO
             parent_width = max(util.strlen(s) for s in [*parent_lines, ""]) + 1
 
@@ -57,8 +58,9 @@ class Menu(object):
             line = ""
 
             spec = ""
-            spec += str(self.selected) + ","
-            spec += ">" if self.selected == index else " "
+            spec += str(self.selected) or "."
+            spec += ","
+            spec += ">" if self.selected == index else "."
             line += format(option, spec)
 
             lines.append(line)
@@ -82,6 +84,9 @@ class Menu(object):
         return lines
 
     def print(self, ctx: "context.MenuContext", clear: bool = True) -> str:
+        if ctx.menu != self:
+            return ""
+
         if clear:
             util.clear()
         else:
@@ -93,6 +98,8 @@ class Menu(object):
 
     def run(self, ctx: "context.MenuContext") -> None:
         if ctx.exit_next:
+            return
+        if ctx.menu != self:
             return
 
         self.print(ctx)

@@ -1,8 +1,8 @@
 from apcsp.ui.action import MenuAction
 from apcsp.ui.context import MenuContext
-from apcsp.ui.form import FormField, NumericField, PasswordField, SelectField, TextField
+from apcsp.ui.form import FormField
 from apcsp.ui.menu import Menu
-from apcsp.ui.obj import Category, Empty, Text, Title
+from apcsp.ui.obj import Category, MenuText, Title
 from apcsp.ui.selectable import Button, FormResult
 from apcsp.ui.util import clear
 from apcsp.ui.validation import IntRules, TextRules
@@ -30,7 +30,7 @@ main = Menu(
     Title("Example Menu"),
     Category("Category 1"),
     Button("Button 1"),
-    Text("  Lorem ipsum dolor sit amet, consectetur adipiscing elit. "),
+    MenuText("  Lorem ipsum dolor sit amet, consectetur adipiscing elit. "),
     Button.Submenu(
         "Example Form",
         Menu(
@@ -49,7 +49,7 @@ main = Menu(
                 "Disallowed chars (!,*)",
                 rules=TextRules(disallowed_chars="!*"),
             ),
-            Text.Empty(),
+            MenuText.Empty(),
             Button.Cancel(),
             Button.Submit(on_submit=submit),
         ),

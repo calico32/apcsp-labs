@@ -37,7 +37,7 @@ class Empty(MenuObject):
         return ""
 
 
-class Text(MenuObject):
+class MenuText(MenuObject):
     def __init__(self, text: str):
         self.text = text
 
